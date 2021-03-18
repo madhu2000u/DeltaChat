@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/user_single_cardView"
+    app:cardPreventCornerOverlap="true"
+    app:cardCornerRadius="@dimen/cardview_default_radius"
+    app:cardUseCompatPadding="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp"
+    app:cardElevation="@dimen/cardview_default_elevation">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/circle_image_single"
+            android:src="@drawable/default_profile_pic"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Display Name"
+                android:id="@+id/name_user_single"
+                android:paddingLeft="20dp"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_gravity="center_vertical"/>
+
+            <TextView
+                android:id="@+id/status_user_single"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:textSize="16dp"
+                android:layout_gravity="bottom"
+                android:text="Status"
+                android:paddingTop="10dp"/>
+
+        </LinearLayout>
+
+
+
+
+
+
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

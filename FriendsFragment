@@ -1,0 +1,131 @@
+ @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("msg", "onStart()");
+
+        /*Query query = FirebaseDatabase.getInstance()
+                .getReference()
+                .child(Constants.databaseRoot);
+
+        FirebaseRecyclerOptions<ChatUsers> options =
+                new FirebaseRecyclerOptions.Builder<ChatUsers>()
+                        .setQuery(query, new SnapshotParser<ChatUsers>() {
+                            @NonNull
+                            @Override
+                            public ChatUsers parseSnapshot(@NonNull DataSnapshot snapshot) {
+                                return new ChatUsers(snapshot.child(Constants.userName).getValue().toString(),
+                                        snapshot.child(Constants.userStatus).getValue().toString(),
+                                        snapshot.child(Constants.userImage).getValue().toString());
+                            }
+                        })
+                        .build();
+
+        /*adapter = new FirebaseRecyclerAdapter<ChatUsers, FriendsUserViewHolder>(options) {
+            @Override
+            public FriendsUserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.user_single_layout, parent, false);
+
+                return new FriendsUserViewHolder(view);
+            }
+
+
+            @Override
+            protected void onBindViewHolder(FriendsUserViewHolder holder, final int position, ChatUsers model) {
+                holder.set_name(model.getName());
+                holder.set_status(model.getStatus());
+
+                holder.cardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getContext(), String.valueOf(position), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+        };
+        recyclerView.setAdapter(adapter);*/
+
+        adapter = new FirebaseRecyclerAdapter<ChatUsers, FriendsFragment.FriendsUserViewHolder>(
+                ChatUsers.class,
+                R.layout.user_single_layout,
+                FriendsUserViewHolder.class,
+                databaseReference
+
+
+        ) {
+            @Override
+            protected void populateViewHolder(final FriendsFragment.FriendsUserViewHolder friendsUserViewHolder, final ChatUsers chatUsers, int i) {
+                Log.i("msg", "databasereference" + databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).toString());
+                Log.i("msg", "chatuseres" + chatUsers.getUid());
+                //databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid())).toString() != chatUsers.getUid())
+
+                if (!(chatUsers.getUid().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))) {
+                    friendsReference.child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.hasChild(chatUsers.getUid()))
+                            {
+                                friendsUserViewHolder.set_name(chatUsers.getName());
+                                friendsUserViewHolder.set_status(chatUsers.getStatus());
+                                friendsUserViewHolder.setThumbNail(chatUsers.getThumbNail(), getContext());
+                                friendsUserViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        String Uid = chatUsers.getUid();
+                                        Intent userProfileIntent = new Intent(getContext(), UserProfileActivity.class);
+                                        userProfileIntent.putExtra("Uid", Uid);
+                                        startActivity(userProfileIntent);
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+
+            }
+        };
+        recyclerView.setAdapter(adapter);
+
+    }
+
+    public static class FriendsUserViewHolder extends RecyclerView.ViewHolder {
+
+        private CardView cardView;
+        private TextView userName;
+        private TextView userStatus;
+        private CircleImageView circleImageView;
+
+        public FriendsUserViewHolder(@NonNull View itemView) {
+            super(itemView);
+            cardView = itemView.findViewById(R.id.user_single_cardView);
+
+            userName = itemView.findViewById(R.id.name_user_single);
+
+            userStatus = itemView.findViewById(R.id.status_user_single);
+
+            circleImageView = itemView.findViewById(R.id.circle_image_single);
+
+        }
+
+        public void set_name(String name) {
+
+            userName.setText(name);
+        }
+
+        public void set_status(String status) {
+
+            userStatus.setText(status);
+        }
+
+        public void setThumbNail(String thumbNailImage, Context context) {
+
+            Picasso.with(context).load(thumbNailImage).placeholder(R.drawable.default_profile_pic).into(circleImageView);
+        }
+    }
